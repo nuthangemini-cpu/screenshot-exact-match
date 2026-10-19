@@ -4,12 +4,12 @@ import { ProductCard } from "@/components/site/ProductCard";
 import { CATEGORIES, PRODUCTS, type Category } from "@/lib/products";
 import { cn } from "@/lib/utils";
 
-type Search = { cat?: Category; q?: string };
+type Search = { cat?: Category | undefined; q?: string | undefined };
 
 export const Route = createFileRoute("/shop")({
   validateSearch: (s: Record<string, unknown>): Search => ({
-    cat: CATEGORIES.some((c) => c.id === s.cat) ? (s.cat as Category) : undefined,
-    q: typeof s.q === "string" ? s.q : undefined,
+    cat: CATEGORIES.some((c) => c.id === s["cat"]) ? (s["cat"] as Category) : undefined,
+    q: typeof s["q"] === "string" ? (s["q"] as string) : undefined,
   }),
   head: () => ({
     meta: [

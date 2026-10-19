@@ -22,7 +22,7 @@ export function SiteHeader() {
 
   const links = (cls: string) =>
     NAV.map((n) => (
-      <Link key={n.label} to={n.to} search={"cat" in n ? { cat: n.cat } : undefined} className={cls} activeOptions={{ exact: true, includeSearch: true }} activeProps={{ className: "text-foreground font-semibold" }}>
+      <Link key={n.label} to={n.to} search={"cat" in n ? { cat: n.cat } : {}} className={cls} activeOptions={{ exact: true, includeSearch: true }} activeProps={{ className: "text-foreground font-semibold" }}>
         {n.label}
       </Link>
     ));
