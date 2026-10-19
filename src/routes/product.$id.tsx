@@ -29,7 +29,7 @@ export const Route = createFileRoute("/product/$id")({
 
 function ProductPage() {
   const p = Route.useLoaderData();
-  const [color, setColor] = useState(p.colors[0]);
+  const [color, setColor] = useState(p.colors[0] ?? "");
   const [size, setSize] = useState("M");
   const add = useShop((s) => s.addToCart);
   const navigate = useNavigate();

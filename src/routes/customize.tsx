@@ -152,7 +152,7 @@ function Studio() {
             <p className="text-xs text-muted-foreground">Base {formatINR(base.price)} + Customization {formatINR(extra)} ({usedSides.join(", ") || "none"})</p>
           </div>
           <Button size="lg" className="w-full" onClick={() => {
-            add({ productId: base.id, name: `Custom ${base.name}`, image: base.image, size, color: base.colors[0], price: total, customization: layers.map((l) => `${l.side}: ${l.kind === "text" ? l.value : "artwork"}`).join(" · ") || undefined });
+            add({ productId: base.id, name: `Custom ${base.name}`, image: base.image, size, color: base.colors[0] ?? "", price: total, customization: layers.map((l) => `${l.side}: ${l.kind === "text" ? l.value : "artwork"}`).join(" · ") || undefined });
             toast.success("Custom design added to cart");
             navigate({ to: "/cart" });
           }}>Add to Cart</Button>
