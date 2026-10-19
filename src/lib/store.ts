@@ -10,7 +10,7 @@ export interface CartItem {
   color: string;
   price: number;
   qty: number;
-  customization?: string;
+  customization?: string | undefined;
 }
 
 export interface Order {

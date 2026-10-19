@@ -82,7 +82,7 @@ function Home() {
             <p className="mt-4 max-w-md opacity-70">Add text, upload artwork and place it on the front, back or sleeves — preview it in 360° before you order.</p>
             <Button asChild size="lg" variant="secondary" className="mt-8"><Link to="/customize">Start designing <ArrowRight /></Link></Button>
           </div>
-          <img src={CATEGORIES[4].image} alt="Custom sports jersey" loading="lazy" className="mx-auto w-full max-w-sm rounded-xl" />
+          <img src={CATEGORIES[4]?.image} alt="Custom sports jersey" loading="lazy" className="mx-auto w-full max-w-sm rounded-xl" />
         </div>
       </section>
     </>

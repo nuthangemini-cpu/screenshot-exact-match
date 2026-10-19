@@ -9,7 +9,7 @@ import { useShop } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/customize")({
-  validateSearch: (s: Record<string, unknown>): { product?: string } => ({ product: typeof s.product === "string" ? s.product : undefined }),
+  validateSearch: (s: Record<string, unknown>): { product?: string | undefined } => ({ product: typeof s["product"] === "string" ? (s["product"] as string) : undefined }),
   head: () => ({
     meta: [
       { title: "Customization Studio — Design Your Own | DRIPWEAR" },
@@ -29,9 +29,9 @@ const INK = ["#111111", "#ffffff", "#2457ff", "#d92b2b", "#1f8a4c", "#d6b25e"];
 
 function Studio() {
   const { product } = Route.useSearch();
-  const initial = product && BASES.includes(product) ? product : product && getProduct(product) ? product : BASES[3];
+  const initial = product && BASES.includes(product) ? product : product && getProduct(product) ? product : BASES[3]!;
   const [baseId, setBaseId] = useState(initial);
-  const base = getProduct(baseId) ?? PRODUCTS[0];
+  const base = getProduct(baseId) ?? PRODUCTS[0]!;
   const [side, setSide] = useState<Side>("front");
   const [layers, setLayers] = useState<Layer[]>(base.category === "jerseys" ? [
     { id: "n", side: "back", kind: "text", value: "YOUR NAME", x: 50, y: 30, size: 28, color: "#ffffff" },
@@ -58,7 +58,7 @@ function Studio() {
   };
   const onUpload = (f?: File) => {
     if (!f) return;
-    if (f.size > 5_000_000) return toast.error("Image must be under 5 MB");
+    if (f.size > 5_000_000) { toast.error("Image must be under 5 MB"); return; }
     const r = new FileReader();
     r.onload = () => {
       const id = crypto.randomUUID();
@@ -152,7 +152,7 @@ function Studio() {
             <p className="text-xs text-muted-foreground">Base {formatINR(base.price)} + Customization {formatINR(extra)} ({usedSides.join(", ") || "none"})</p>
           </div>
           <Button size="lg" className="w-full" onClick={() => {
-            add({ productId: base.id, name: `Custom ${base.name}`, image: base.image, size, color: base.colors[0], price: total, customization: layers.map((l) => `${l.side}: ${l.kind === "text" ? l.value : "artwork"}`).join(" · ") || undefined });
+            add({ productId: base.id, name: `Custom ${base.name}`, image: base.image, size, color: base.colors[0] ?? "", price: total, customization: layers.map((l) => `${l.side}: ${l.kind === "text" ? l.value : "artwork"}`).join(" · ") || undefined });
             toast.success("Custom design added to cart");
             navigate({ to: "/cart" });
           }}>Add to Cart</Button>

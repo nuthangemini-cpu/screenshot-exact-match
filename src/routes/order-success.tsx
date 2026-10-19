@@ -7,7 +7,7 @@ import { useShop } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/order-success")({
-  validateSearch: (s: Record<string, unknown>): { id?: string } => ({ id: typeof s.id === "string" ? s.id : undefined }),
+  validateSearch: (s: Record<string, unknown>): { id?: string | undefined } => ({ id: typeof s["id"] === "string" ? (s["id"] as string) : undefined }),
   head: () => ({
     meta: [
       { title: "Order Placed — DRIPWEAR" },
