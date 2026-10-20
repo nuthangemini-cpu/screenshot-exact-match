@@ -4,7 +4,8 @@ import type { Design } from './design';
 
 export async function saveDesign(design: Design, name: string, userId: string, id?: string) {
   const layers = await Promise.all(design.layers.map(async layer => {
-    if (layer.kind !== 'image' || layer.assetPath) return layer;
+    if (layer.kind !== 'image') return layer;
+    if (layer.assetPath) return {...layer,value:''};
     const blob = await (await fetch(layer.value)).blob();
     const path = `${userId}/${crypto.randomUUID()}.${blob.type === 'image/png' ? 'png' : 'jpg'}`;
     const {error} = await supabase.storage.from('design-artwork').upload(path, blob);
