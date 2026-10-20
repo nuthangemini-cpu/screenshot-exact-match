@@ -45,6 +45,7 @@ function Cart() {
                 <div className="flex justify-between gap-2"><p className="font-semibold">{i.name}</p><p className="font-bold">{formatINR(i.price * i.qty)}</p></div>
                 <p className="text-xs text-muted-foreground">Size: {i.size}</p>
                 {i.customization && <p className="truncate text-xs text-muted-foreground">Customization: {i.customization}</p>}
+                {i.design && <Link to="/customize" search={{edit:i.key}} className="mt-2 inline-block text-xs underline">Edit design</Link>}
                 <div className="mt-3 flex items-center gap-4">
                   <div className="flex items-center rounded-md border">
                     <button aria-label="Decrease" className="p-2" onClick={() => setQty(i.key, i.qty - 1)}><Minus className="h-3 w-3" /></button>
@@ -61,6 +62,7 @@ function Cart() {
           <p className="font-semibold">Order summary</p>
           <Row l="Subtotal" r={formatINR(sub)} />
           <Row l="Shipping" r={ship === 0 ? "Free" : formatINR(ship)} />
+          <p className="mt-3 text-xs text-muted-foreground">Sample prices and shipping estimates. Ordering is not yet available.</p>
           <div className="mt-4 flex justify-between border-t pt-4 text-xl font-black"><span>Total</span><span>{formatINR(sub + ship)}</span></div>
           <Button asChild size="lg" className="mt-6 w-full"><Link to="/checkout">Proceed to Checkout</Link></Button>
         </div>
