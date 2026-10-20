@@ -1,48 +1,17 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { ProductCard } from "@/components/site/ProductCard";
-import { formatINR, PRODUCTS } from "@/lib/products";
-import { useShop } from "@/lib/store";
-
-export const Route = createFileRoute("/account")({
-  head: () => ({
-    meta: [
-      { title: "My Account — DRIPWEAR" },
-      { name: "description", content: "Your DRIPWEAR orders and wishlist." },
-      { property: "og:title", content: "My Account — DRIPWEAR" },
-      { property: "og:description", content: "Your DRIPWEAR orders and wishlist." },
-    ],
-  }),
-  component: Account,
-});
-
-function Account() {
-  const { orders, wishlist } = useShop();
-  const [ready, setReady] = useState(false);
-  useEffect(() => setReady(true), []);
-  if (!ready) return <div className="min-h-[50vh]" />;
-  const wished = PRODUCTS.filter((p) => wishlist.includes(p.id));
-  return (
-    <div className="container-x py-8">
-      <h1 className="text-3xl font-black">My Account</h1>
-      <p className="mt-1 text-sm text-muted-foreground">Sign-in is coming soon — orders and wishlist are saved on this device.</p>
-      <h2 className="mt-10 text-xl font-extrabold">My orders</h2>
-      {orders.length === 0 ? <p className="mt-3 text-sm text-muted-foreground">No orders yet. <Link to="/shop" className="underline">Start shopping</Link></p> : (
-        <ul className="mt-4 divide-y rounded-xl border bg-card">
-          {orders.map((o) => (
-            <li key={o.id} className="flex items-center gap-4 p-4">
-              <img src={o.items[0]?.image} alt="" className="h-14 w-14 rounded bg-surface object-cover" />
-              <div className="min-w-0 flex-1"><p className="font-semibold">{o.id}</p><p className="text-xs text-muted-foreground">{new Date(o.date).toLocaleDateString("en-IN")} · {o.items.length} item(s)</p></div>
-              <span className="rounded-full bg-warning/20 px-2 py-0.5 text-xs font-medium">{o.status}</span>
-              <span className="font-bold">{formatINR(o.total)}</span>
-            </li>
-          ))}
-        </ul>
-      )}
-      <h2 className="mt-12 text-xl font-extrabold">Wishlist</h2>
-      {wished.length === 0 ? <p className="mt-3 text-sm text-muted-foreground">Tap the heart on any product to save it.</p> : (
-        <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-4">{wished.map((p) => <ProductCard key={p.id} product={p} />)}</div>
-      )}
-    </div>
-  );
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Button } from '@/components/ui/button';
+import { ProductCard } from '@/components/site/ProductCard';
+import { PRODUCTS } from '@/lib/products';
+import { useShop } from '@/lib/store';
+import { useAuth } from '@/lib/auth';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
+export const Route=createFileRoute('/account')({head:()=>({meta:[{title:'My Account — DRIPWEAR'},{name:'description',content:'Manage your private DRIPWEAR designs and account.'},{property:'og:title',content:'My Account — DRIPWEAR'},{property:'og:description',content:'Your saved garment designs and wishlist.'},{property:'og:type',content:'website'},{name:'twitter:card',content:'summary_large_image'},{name:'robots',content:'noindex'}]}),component:Account});
+function Account(){
+ const {user,ready}=useAuth();const wishlist=useShop(s=>s.wishlist);const queryClient=useQueryClient();const navigate=useNavigate();
+ const designs=useQuery({queryKey:['saved-designs',user?.id],enabled:!!user,queryFn:async()=>{const {data,error}=await supabase.from('saved_designs').select('id,name,updated_at').order('updated_at',{ascending:false});if(error)throw error;return data}});
+ if(!ready)return <div className="min-h-[50vh]"/>;
+ if(!user)return <div className="container-x py-20"><h1 className="text-3xl font-black">Your DRIPWEAR account</h1><Button asChild className="mt-6"><Link to="/login" search={{next:'/account'}}>Sign In</Link></Button></div>;
+ return <div className="container-x py-8"><div className="flex items-center justify-between gap-4"><div><h1 className="text-3xl font-black">My Account</h1><p className="mt-2 text-sm text-muted-foreground">{user.user_metadata['full_name']??'Welcome back'}</p></div><Button variant="outline" onClick={async()=>{await queryClient.cancelQueries();queryClient.clear();await supabase.auth.signOut();navigate({to:'/login',search:{next:'/account'},replace:true})}}>Sign Out</Button></div><h2 className="mt-10 text-xl font-bold">Saved designs</h2>{designs.isPending?<p className="mt-3">Loading designs…</p>:designs.isError?<p role="alert" className="mt-3 text-destructive">Designs could not be loaded. <Button variant="ghost" onClick={()=>designs.refetch()}>Retry</Button></p>:<div className="mt-4 divide-y border-y">{designs.data?.length===0&&<p className="py-6 text-muted-foreground">No saved designs yet.</p>}{designs.data?.map(d=><div key={d.id} className="flex items-center justify-between gap-3 py-4"><div className="min-w-0"><p className="truncate font-semibold">{d.name}</p><p className="text-xs text-muted-foreground">{new Date(d.updated_at).toLocaleDateString('en-IN')}</p></div><div className="flex gap-2"><Button asChild variant="outline" size="sm"><Link to="/customize" search={{design:d.id}}>Edit</Link></Button><Button variant="ghost" size="sm" onClick={async()=>{const {error}=await supabase.from('saved_designs').delete().eq('id',d.id);if(error)toast.error('Could not delete design.');else queryClient.invalidateQueries({queryKey:['saved-designs']})}}>Delete</Button></div></div>)}</div>}<h2 className="mt-10 text-xl font-bold">Orders</h2><p className="mt-3 text-sm text-muted-foreground">Ordering is not yet enabled. No confirmed orders or tracking updates are available.</p><h2 className="mt-10 text-xl font-bold">Wishlist</h2><p className="mt-2 text-xs text-muted-foreground">Saved on this device.</p><div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-4">{PRODUCTS.filter(p=>wishlist.includes(p.id)).map(p=><ProductCard key={p.id} product={p}/>)}</div></div>
 }

@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { designKey, type Design } from './design';
 
 export interface CartItem {
   key: string;
@@ -11,6 +12,7 @@ export interface CartItem {
   price: number;
   qty: number;
   customization?: string | undefined;
+  design?: Design;
 }
 
 export interface Order {
@@ -43,7 +45,7 @@ export const useShop = create<ShopState>()(
       orders: [],
       addToCart: (item, qty = 1) =>
         set((s) => {
-          const key = `${item.productId}-${item.size}-${item.color}-${item.customization ?? ""}`;
+          const key = item.design ? designKey(item.design) : `${item.productId}-${item.size}-${item.color}-${item.customization ?? ""}`;
           const existing = s.cart.find((c) => c.key === key);
           if (existing) return { cart: s.cart.map((c) => (c.key === key ? { ...c, qty: c.qty + qty } : c)) };
           return { cart: [...s.cart, { ...item, key, qty }] };

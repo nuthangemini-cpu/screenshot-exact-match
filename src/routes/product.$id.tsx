@@ -17,6 +17,8 @@ export const Route = createFileRoute("/product/$id")({
   head: ({ loaderData }) => ({
     meta: loaderData
       ? [
+          { property: "og:type", content: "website" },
+          { name: "twitter:card", content: "summary_large_image" },
           { title: `${loaderData.name} — DRIPWEAR` },
           { name: "description", content: loaderData.description },
           { property: "og:title", content: `${loaderData.name} — DRIPWEAR` },
@@ -43,7 +45,7 @@ function ProductPage() {
           <img src={p.image} alt={p.name} width={816} height={816} className="h-full w-full object-cover" />
         </div>
         <div>
-          <h1 className="text-3xl font-black md:text-4xl">{p.name}</h1>
+          <p className="mb-3 text-xs text-muted-foreground">Sample product — pricing, specifications, colors and fit are not confirmed.</p><h1 className="text-3xl font-black md:text-4xl">{p.name}</h1>
           <div className="mt-2 flex items-center gap-1 text-sm text-muted-foreground"><Star className="h-4 w-4 fill-star text-star" /> {p.rating} ({p.reviews} reviews)</div>
           <div className="mt-4 flex items-baseline gap-3">
             <span className="text-3xl font-black">{formatINR(p.price)}</span>
@@ -71,7 +73,7 @@ function ProductPage() {
           <Accordion type="single" collapsible className="mt-8 max-w-md">
             <AccordionItem value="d"><AccordionTrigger>Product details</AccordionTrigger><AccordionContent>Fabric: {p.fabric}. Machine wash cold, inside out.</AccordionContent></AccordionItem>
             <AccordionItem value="s"><AccordionTrigger>Size & fit</AccordionTrigger><AccordionContent>True to size. Size up for a looser fit.</AccordionContent></AccordionItem>
-            <AccordionItem value="r"><AccordionTrigger>Delivery & returns</AccordionTrigger><AccordionContent>Free shipping on orders above ₹999. Returns policy to be confirmed.</AccordionContent></AccordionItem>
+            <AccordionItem value="r"><AccordionTrigger>Delivery & returns</AccordionTrigger><AccordionContent>Shipping and returns are not yet confirmed. Ordering is unavailable.</AccordionContent></AccordionItem>
           </Accordion>
         </div>
       </div>
