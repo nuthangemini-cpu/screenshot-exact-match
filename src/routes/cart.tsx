@@ -9,6 +9,8 @@ import { cartCount, cartSubtotal, useShop } from "@/lib/store";
 export const Route = createFileRoute("/cart")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Your Cart — DRIPWEAR" },
       { name: "description", content: "Review items in your DRIPWEAR cart." },
       { property: "og:title", content: "Your Cart — DRIPWEAR" },

@@ -13,6 +13,8 @@ export const Route = createFileRoute("/shop")({
   }),
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Shop T-Shirts, Hoodies, Polos & Jerseys — DRIPWEAR" },
       { name: "description", content: "Browse DRIPWEAR's premium streetwear collection in INR." },
       { property: "og:title", content: "Shop — DRIPWEAR" },
@@ -38,6 +40,7 @@ function Shop() {
   return (
     <div className="container-x py-8">
       <p className="text-xs text-muted-foreground"><Link to="/">Home</Link> / Shop</p>
+      <p className="mt-3 text-xs text-muted-foreground">Sample collection — prices, materials and availability are not confirmed.</p>
       <h1 className="mt-2 text-4xl font-black">{CATEGORIES.find((c) => c.id === cat)?.label ?? "All products"}</h1>
       <div className="mt-8 grid gap-8 lg:grid-cols-[220px_1fr]">
         <aside className="space-y-8">

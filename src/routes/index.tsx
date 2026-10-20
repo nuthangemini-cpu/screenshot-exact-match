@@ -8,6 +8,8 @@ import { CATEGORIES, PRODUCTS } from "@/lib/products";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "DRIPWEAR — Wear Your Story | Custom Streetwear India" },
       { name: "description", content: "Premium T-shirts, hoodies and jerseys you can customise. Create. Express." },
       { property: "og:title", content: "DRIPWEAR — Wear Your Story" },
