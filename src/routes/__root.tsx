@@ -13,6 +13,7 @@ import { useRouterState } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Toaster } from "@/components/ui/sonner";
+import { AuthProvider } from '@/lib/auth';
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -123,10 +124,10 @@ function RootComponent() {
   const isAdmin = useRouterState({ select: (r) => r.location.pathname.startsWith("/admin") });
 
   return (
-    <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}><AuthProvider>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       {isAdmin ? <Outlet /> : (<><SiteHeader /><main><Outlet /></main><SiteFooter /></>)}
       <Toaster position="top-center" />
-    </QueryClientProvider>
+    </AuthProvider></QueryClientProvider>
   );
 }

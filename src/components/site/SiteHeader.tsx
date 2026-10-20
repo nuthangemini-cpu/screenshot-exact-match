@@ -3,6 +3,7 @@ import { Heart, Menu, Search, ShoppingBag, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { cartCount, useShop } from "@/lib/store";
+import { useAuth } from '@/lib/auth';
 
 const NAV = [
   { to: "/", label: "Home" },
@@ -15,6 +16,7 @@ const NAV = [
 ] as const;
 
 export function SiteHeader() {
+  const {user} = useAuth();
   const cart = useShop((s) => s.cart);
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
@@ -49,7 +51,7 @@ export function SiteHeader() {
         <nav className="hidden justify-center gap-7 text-sm text-muted-foreground lg:flex">{links("transition-colors hover:text-foreground")}</nav>
         <div className="flex items-center justify-end gap-4">
           <Link to="/shop" aria-label="Search"><Search className="h-5 w-5" /></Link>
-          <Link to="/account" aria-label="Account" className="hidden sm:block"><User className="h-5 w-5" /></Link>
+          <Link to={user ? '/account' : '/login'} search={{next:'/account'}} aria-label={user ? 'My account' : 'Sign in'}><User className="h-5 w-5" /></Link>
           <Link to="/account" aria-label="Wishlist" className="hidden sm:block"><Heart className="h-5 w-5" /></Link>
           <Link to="/cart" aria-label="Cart" className="relative">
             <ShoppingBag className="h-5 w-5" />

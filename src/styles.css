@@ -105,7 +105,7 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
-  h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.02em; }
+  h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: 0; }
 }
 
 @utility font-display { font-family: var(--font-display); }
@@ -123,3 +123,13 @@
   animation: spinY 6s linear infinite;
 }
 @keyframes spinY { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+
+:root {
+  --garment-ink: #171717; --garment-white: #f7f7f5; --garment-blue: #2563eb; --garment-red: #dc2626; --garment-green: #15803d;
+  --print-ink: #171717; --print-white: #ffffff; --print-blue: #2563eb; --print-red: #dc2626; --print-green: #15803d;
+}
+.auth-input { display:block; margin-top:.5rem; width:100%; min-height:44px; border:1px solid var(--input); border-radius:6px; background:var(--card); padding:.75rem; font-weight:400; }
+.swatch-ink { background:var(--garment-ink); } .swatch-white { background:var(--garment-white); } .swatch-blue { background:var(--garment-blue); } .swatch-red { background:var(--garment-red); } .swatch-green { background:var(--garment-green); }
+.design-canvas .canvas-container { width:100% !important; height:100% !important; }
+.design-canvas canvas { width:100% !important; height:100% !important; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation:none !important; transition:none !important; scroll-behavior:auto !important; } }
